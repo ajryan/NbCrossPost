@@ -1,0 +1,46 @@
+﻿@model NbCrossPost.Web.Models.EventsViewModel
+@{
+    ViewBag.Title = "Events";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Source: @Model.Source</h2>
+        @if (!String.IsNullOrEmpty(ViewBag.TransferMessage))
+        {
+            <p>@Html.Raw(ViewBag.TransferMessage)</p>
+        }
+        <ul>
+            @foreach (var evt in Model.SourceEventData.results)
+            {
+                using (Html.BeginForm("TransferEvent", "CrossPost", FormMethod.Post, new { id = "transfer" + evt.calendar_id }))
+                {
+                    @Html.Hidden("sourcePage", Model.SourcePage)
+                    @Html.Hidden("sourceCalId", evt.calendar_id)
+                    <li><a href="javascript:document.getElementById('transfer@(evt.calendar_id)').submit()">TRANSFER >></a> @evt.id: @evt.name</li>
+                }
+            }
+            @if (Model.SourcePage > 1)
+            {
+                @Html.ActionLink("<<", "Events", new { sourcePage = Model.SourcePage - 1, targetPage = Model.TargetPage })
+            }
+            Page @Model.SourcePage
+            @Html.ActionLink(">>", "Events", new { sourcePage = Model.SourcePage + 1, targetPage = Model.TargetPage })
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2>Target: @Model.Target</h2>
+        <ul>
+            @foreach (var evt in Model.TargetEventData.results)
+            {
+                <li>@evt.id: @evt.name</li>
+            }
+            @if (Model.TargetPage > 1)
+            {
+                @Html.ActionLink("<<", "Events", new { sourcePage = Model.SourcePage, targetPage = Model.TargetPage - 1 })
+            }
+            Page @Model.TargetPage
+            @Html.ActionLink(">>", "Events", new { sourcePage = Model.SourcePage, targetPage = Model.TargetPage + 1 })
+        </ul>
+    </div>
+</div>
