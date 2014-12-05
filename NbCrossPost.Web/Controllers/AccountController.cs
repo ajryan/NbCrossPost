@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Configuration;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
@@ -56,7 +57,7 @@ namespace NbCrossPost.Web.Controllers
                 return View(model);
             }
 
-            if (model.Password != "testpassword")
+            if (model.Password != ConfigurationManager.AppSettings["SitePassword"])
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
                 return View(model);
